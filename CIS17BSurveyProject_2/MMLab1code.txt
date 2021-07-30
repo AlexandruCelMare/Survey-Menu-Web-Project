@@ -1,0 +1,204 @@
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+// Function prototypes
+bool isDuplicated (int, string);
+void evaluate (string, string, char&, char&);
+string generate(int &);
+void userGuess(int, string &);
+int cnvrt(char);
+
+
+int main(int argc, char** argv) {
+    char retry;
+    cout << "| Mastermind C++ | " << endl; // Game Title
+    cout << "| By Alexander B.|" << endl;
+    do{
+srand(static_cast<unsigned int>(time(0))); // Initializes seed for random number
+    char userInput;
+    int sum;
+    int rightRArray[5] = {};
+    int rightWArray[5] = {};
+    int sumArray[5] = {};
+    string guess;  // A bunch of variable declarations
+    string answer;
+    char rightR;
+    char rightW;
+    int pegs = 4;
+    int count = 10000; // Initializing count integer
+    answer = generate(pegs); // Calling generate function and 
+                             // assigning it to string answer
+    cout << "Enter 'y' for  for manual input. Anything else for automated." << endl;
+    cin >> userInput;
+    if (userInput == 'y' || userInput == 'Y'){
+        userGuess(pegs, answer);
+    }
+    else {
+        answer = generate(pegs);
+    }
+    
+    //    do {                        // Do while loop for evaluating user
+//        if (count < 1){
+//            break;  
+//        }
+//        
+//        userGuess(pegs, guess);
+//        count--;
+//        
+//    } while (!evaluate(guess, answer, rightR, rightW)); // Stops when evaluate function
+//                                                        // returns true
+    
+    
+    cout << "| Code | Guess | #right | #right in wrong spot | Sum |" << endl;
+    for (int i = 0; i < count; i++){
+        guess = to_string(i);
+        while (guess.length() != 4){
+            guess = '0' + guess;
+        }
+        evaluate(guess, answer, rightR, rightW);
+        sum = (rightR) + (rightW); 
+        rightRArray[(rightR)]++;
+        rightWArray[(rightW)]++;
+        sumArray[(sum)]++;
+    }
+    cout << "\nFOR GUESSES IN RIGHT PLACE:" << endl;
+    cout << "# of times that 4 came up: " << rightRArray[4] << endl;
+    cout << "# of times that 3 came up: " << rightRArray[3] <<endl;
+    cout << "# of times that 2 came up: " << rightRArray[2] <<endl;
+    cout << "# of times that 1 came up: " << rightRArray[1] <<endl;
+    cout << "# of times that 0 came up: " << rightRArray[0] <<endl;
+    
+    cout << "\nFOR GUESSES IN WRONG PLACE:" << endl;
+    cout << "# of times that 4 came up: " << rightWArray[4] << endl;
+    cout << "# of times that 3 came up: " << rightWArray[3] <<endl;
+    cout << "# of times that 2 came up: " << rightWArray[2] <<endl;
+    cout << "# of times that 1 came up: " << rightWArray[1] <<endl;
+    cout << "# of times that 0 came up: " << rightWArray[0] <<endl;
+    
+    cout << "\nFOR SUM:" << endl;
+    cout << "# of times that 4 came up: " << sumArray[4] << endl;
+    cout << "# of times that 3 came up: " << sumArray[3] <<endl;
+    cout << "# of times that 2 came up: " << sumArray[2] <<endl;
+    cout << "# of times that 1 came up: " << sumArray[1] <<endl;
+    cout << "# of times that 0 came up: " << sumArray[0] <<endl;
+    
+    cout << "\nWould you like to run again? (y/n)" << endl;
+    
+    cin >> retry;
+    } while (retry == 'y');
+ 
+    
+    return 0;
+}
+// Evaluate function, basically the big boy of the program. Does all of the hard work
+void evaluate (string guess, string answer, char& rightR, char& rightW){
+    int sum;
+    string oGuess = guess;
+    string check = "    "; // Initializing whitespace to string check
+    rightR = 0; // Assiging 0 to rightR and rightW
+    rightW = 0;
+    // RightR is the number of digits in the right position
+    // RightW is the number of digits in the wrong position
+    for (int i = 0; i < answer.length(); i++){ // For loop records the number
+        if (answer[i] == guess[i]){         // of digits in the right position
+            rightR++;
+            check[i] = 'x';
+            guess[i] = 'x';
+            
+        }
+    }
+    for (int i = 0; i < answer.length(); i++){ // For loop records the number
+        for (int j = 0; j < answer.length(); j++){ // of digits in the wrong place
+            if (i != j && answer[i] == guess[j] && check[i] != 'x'){
+                rightW++;
+                check[i] = 'x';
+                break;
+            }
+        }
+    }
+    sum = (rightR + rightW);
+    cout << "  " << answer << "   " << oGuess << "      " << +rightR << "               " << +rightW << "              " << sum << endl;        
+}
+
+// Generate function, as the name implies, 
+// it generates a code for the user to guess
+string generate(int &pegs){
+    int genDigit; // More variable declarations
+    string numAnswer = "";
+// Asking the user the length of the code (or number of pegs)
+// to generate
+//    cout << "How many pegs will the game contain?" << endl;
+//    cin >> pegs;
+//    cout << endl;
+//    // Asking the user whether they want to allow duplicates
+//    cout << "Allow duplicates? (y/n)" << endl;
+//    cin >> dup;
+//    cout << endl;
+//    // If the user responds with "y", the for loop generates a
+//    // code while taking into consideration the number pegs specified
+//    // and allowing numbers to duplicate themselves
+//    if (dup == 'y'){
+//        for (int i = 0; i < pegs; i++){      
+//            genDigit = rand() %10;
+//            numAnswer += to_string(genDigit);
+//        }
+//    }
+//    // If the user responds with "n", the for loop generates a
+//    // code while taking into consideration the number pegs specified
+//    // and NOT allowing numbers to duplicate themselves
+//    else if (dup == 'n'){
+    for (int i = 0; i < pegs; i++){      
+        genDigit = rand() %10;
+        if (isDuplicated(genDigit, numAnswer)){
+            i--;
+            continue;    
+        }
+        else{
+            numAnswer += to_string(genDigit);           
+        }
+    }
+    return numAnswer; // Returns the newly generated code
+}
+
+// userGuess, the function that takes the user's input and validates
+// whether the guess provides a code with the correct length
+void userGuess(int pegs, string &guessDigit){
+    cout << "Enter a guess that is " << pegs << " digits long:" << endl;
+    cout << endl;
+    cin >> guessDigit;
+    if (guessDigit.length() > pegs || guessDigit.length() < pegs){
+        cout << "Error, try again." << endl << endl;
+        userGuess(pegs, guessDigit);
+    }
+    for (int i = 0; i < pegs; i++){
+        if (guessDigit[i] < '0' || guessDigit[i] > '9'){
+            cout << "Error, input a number." << endl;
+            userGuess(pegs, guessDigit);
+        }
+    }
+}
+
+// isDuplicated, aids in adhering to the user's specified
+// needs regarding duplication
+bool isDuplicated (int genDigit, string numAnswer){
+    
+    for (int i = 0; i < numAnswer.length(); i++){
+        if (genDigit == cnvrt(numAnswer[i])){
+          return true;  
+        }
+    }
+    return false;   
+}
+
+// cnvrt, copied straight from Dr. Lehr's assignments
+int  cnvrt(char digit){
+    if(digit<'0'||digit>'9'){
+        cout<<"You don't know what you are doing"<<endl;
+        exit(0);
+    }
+    return digit-'0';
+}

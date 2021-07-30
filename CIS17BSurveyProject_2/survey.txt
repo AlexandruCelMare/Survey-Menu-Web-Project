@@ -1,0 +1,49 @@
+3
+xTrucks
+3
+xHow do you like your hondas?
+2
+xManual
+2
+xAutomatic
+0
+xHow do you like your subarus?
+2
+xAutomatic
+2
+xManual
+0
+xHow do you like your toyotas?
+2
+xAutomatic
+0
+xManual
+2
+xCars
+3
+xHow do you like your hondas?
+2
+xManual
+1
+xAutomatic
+0
+xHow do you like your subarus?
+2
+xAutomatic
+0
+xManual
+1
+xHow do you like your toyotas?
+2
+xAutomatic
+0
+xManual
+1
+xTrains
+1
+xDo you like trains?
+2
+xYes
+1
+xNo
+0
